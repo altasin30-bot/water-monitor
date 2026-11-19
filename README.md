@@ -4,7 +4,7 @@ An IoT-based **water and air quality monitoring system** built with an **ESP32**
 
 The ESP32 reads water and air sensors, sends the data to Firebase over WiFi every 2 seconds, and a website that can be opened from any phone or PC shows the readings live with quality ratings.
 
-**Live demo:** https://YOUR-USERNAME.github.io/water-monitor/
+**Live demo:** https://altasin30-bot.github.io/water-monitor/
 
 ![Dashboard](images/dashboard.png)
 
