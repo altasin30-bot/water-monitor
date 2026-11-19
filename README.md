@@ -6,7 +6,7 @@ The ESP32 reads water and air sensors, sends the data to Firebase over WiFi ever
 
 **Live demo:** https://altasin30-bot.github.io/water-monitor/
 
-![Dashboard](images/dashboard.png)
+![Dashboard](image/dashboard.png)
 
 ---
 
@@ -201,7 +201,7 @@ The overall water quality uses pH, TDS, turbidity and water temperature. These a
 
 | Dashboard | Hardware setup |
 |---|---|
-| ![Dashboard](images/dashboard.png) | ![Hardware](images/hardware.jpg) |
+| ![Dashboard](image/dashboard.png) | ![Hardware](image/hardware.jpg) |
 
 ---
 
