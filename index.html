@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#e6f3f6">
+<meta name="color-scheme" content="light">
+<title>Water & Air Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#e6f3f6; --card:#ffffff; --ink:#0f2a36; --mut:#5b7886; --line:#cfe3e9;
+  --brand:#0a8f9c; --brand-soft:#d5eef1;
+  --ok:#17996a; --ok-bg:#dcf4ea;
+  --warn:#c77d08; --warn-bg:#fdf0d4;
+  --bad:#cf4337; --bad-bg:#fbe1de;
+  --none:#8aa2ad; --none-bg:#eaf0f3;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font:17px/1.4 "Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  padding:calc(env(safe-area-inset-top) + 8px) 16px calc(env(safe-area-inset-bottom) + 28px);
+}
+main{max-width:980px;margin:0 auto}
+
+/* header */
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0 16px}
+h1{font-size:1.45rem;font-weight:800;margin:0;letter-spacing:-.01em}
+#st{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+    padding:8px 14px;border-radius:999px;font-size:.95rem;font-weight:700;color:var(--mut)}
+#st i{width:11px;height:11px;border-radius:50%;background:var(--bad)}
+#st.on{color:var(--ok)}
+#st.on i{background:var(--ok);box-shadow:0 0 0 4px var(--ok-bg)}
+
+/* hero: tank */
+.hero{
+  display:flex;gap:28px;align-items:center;background:var(--card);
+  border:1px solid var(--line);border-radius:28px;padding:26px;margin-bottom:18px;
+}
+.vessel{
+  position:relative;width:128px;height:190px;flex:none;overflow:hidden;
+  border:3px solid #9cc3cd;border-top:none;border-radius:0 0 28px 28px;background:#f2fafb;
+}
+.vessel::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(25% - 2px),rgba(15,42,54,.14) calc(25% - 2px),rgba(15,42,54,.14) 25%);
+}
+#fill{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#58c5d1,#0a8f9c);transition:height 1.2s ease}
+#fill::before{
+  content:"";position:absolute;top:-11px;left:-30%;width:160%;height:24px;border-radius:46%;background:#58c5d1;
+  animation:sway 5s ease-in-out infinite alternate;
+}
+@keyframes sway{to{transform:translateX(14%)}}
+@media (prefers-reduced-motion:reduce){#fill::before{animation:none}#fill{transition:none}}
+.hero-info{min-width:0}
+.hero-label{font-size:1.1rem;font-weight:700;color:var(--mut)}
+.pct{font-size:clamp(4.2rem,16vw,6.6rem);font-weight:800;line-height:1;letter-spacing:-.03em}
+.pct small{font-size:.38em;font-weight:700;color:var(--mut);margin-left:4px;letter-spacing:0}
+#dist{font-size:1.05rem;color:var(--mut);font-weight:600;margin-top:6px}
+#overall{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:9px 16px;border-radius:999px;
+  font-weight:800;font-size:1.05rem;background:var(--none-bg);color:var(--none);
+}
+#overall i{width:10px;height:10px;border-radius:50%;background:currentColor}
+#overall.ok{background:var(--ok-bg);color:var(--ok)}
+#overall.warn{background:var(--warn-bg);color:var(--warn)}
+#overall.bad{background:var(--bad-bg);color:var(--bad)}
+
+/* sensor cards */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.c{
+  background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px 18px 12px;
+  display:flex;flex-direction:column;min-width:0;border-top:6px solid var(--none);
+}
+.c.ok{border-top-color:var(--ok)}.c.warn{border-top-color:var(--warn)}.c.bad{border-top-color:var(--bad)}
+.c-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.c h2{font-size:1.05rem;font-weight:800;margin:0;line-height:1.25}
+.badge{flex:none;font-size:.78rem;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--none-bg);color:var(--none)}
+.c.ok .badge{background:var(--ok-bg);color:var(--ok)}
+.c.warn .badge{background:var(--warn-bg);color:var(--warn)}
+.c.bad .badge{background:var(--bad-bg);color:var(--bad)}
+.v{margin:12px 0 2px;font-size:clamp(2.6rem,9vw,3.6rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.v span{font-size:1.15rem;font-weight:700;color:var(--mut);letter-spacing:0}
+.note{margin:0 0 8px;font-size:.88rem;color:var(--mut);font-weight:500}
+svg{width:100%;height:34px;display:block;margin-top:auto}
+svg path{fill:none;stroke:var(--none);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.c.ok svg path{stroke:var(--ok)}.c.warn svg path{stroke:var(--warn)}.c.bad svg path{stroke:var(--bad)}
+
+footer{color:var(--mut);font-size:.9rem;margin-top:22px;text-align:center;font-weight:600}
+
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:520px){
+  .hero{flex-direction:column;text-align:center;padding:22px 18px}
+  .vessel{width:150px;height:210px}
+  .c{padding:14px 14px 10px}
+  .c-head{flex-direction:column;gap:6px}
+}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>Water &amp; Air Monitor</h1>
+  <div id="st"><i></i><span id="stx">Connecting</span></div>
+</header>
+
+<section class="hero">
+  <div class="vessel"><div id="fill"></div></div>
+  <div class="hero-info">
+    <div class="hero-label">Tank level</div>
+    <div class="pct"><span id="lvl">--</span><small>%</small></div>
+    <div id="dist">Distance to water: -- cm</div>
+    <div id="overall"><i></i><span id="overallx">Waiting for data</span></div>
+  </div>
+</section>
+
+<section class="grid" id="grid"></section>
+<footer id="ft">Waiting for the first reading from your ESP32.</footer>
+
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* ===== CONFIG ===== */
+const DB_URL = "https://water-monitor-3ae76-default-rtdb.asia-southeast1.firebasedatabase.app";
+const TANK_DEPTH_CM = 100;   // distance from the sensor to the tank bottom, in cm
+const STALE_MS = 90000;      // no data for this long = device offline
+
+// key, label, unit, decimals, good range, moderate range, note
+const S = [
+ ["ph","pH","",2,[6.5,8.5],[6,9],"Good range is 6.5 to 8.5"],
+ ["tds","Dissolved solids (TDS)","ppm",0,[0,300],[0,600],"Under 300 is good"],
+ ["ntu","Turbidity","NTU",1,[0,5],[0,25],"Under 5 means clear water"],
+ ["wt","Water temperature","°C",1,[5,30],[0,38],"DS18B20 probe"],
+ ["at","Air temperature","°C",1,[10,32],[0,40],"DHT22 sensor"],
+ ["ah","Humidity","%",0,[30,60],[20,80],"DHT22 sensor"],
+ ["aq","Air quality (MQ135)","",0,[0,1200],[0,2200],"Relative scale, lower is cleaner"]
+];
+const WATER_KEYS = ["ph","tds","ntu","wt"];
+const WORD = {ok:"Good",warn:"Moderate",bad:"Poor"};
+
+const hist = {}, grid = document.getElementById("grid");
+S.forEach(s=>{
+  hist[s[0]] = [];
+  grid.insertAdjacentHTML("beforeend",
+   `<div class="c" id="c_${s[0]}">
+      <div class="c-head"><h2>${s[1]}</h2><span class="badge" id="b_${s[0]}">No data</span></div>
+      <div class="v"><b id="v_${s[0]}">--</b><span>${s[2]}</span></div>
+      <p class="note">${s[6]}</p>
+      <svg viewBox="0 0 100 34" preserveAspectRatio="none"><path id="p_${s[0]}"/></svg>
+    </div>`);
+});
+
+function spark(k){
+  const a = hist[k]; if (a.length < 2) return "";
+  const lo = Math.min(...a), hi = Math.max(...a), r = (hi - lo) || 1;
+  return a.map((v,i)=>(i?"L":"M")+(i/(a.length-1)*100).toFixed(1)+" "+(31-(v-lo)/r*28).toFixed(1)).join("");
+}
+function grade(v, ok, warn){
+  if (v >= ok[0] && v <= ok[1]) return "ok";
+  return (v >= warn[0] && v <= warn[1]) ? "warn" : "bad";
+}
+
+let last = 0;
+function render(d){
+  last = d.ts || Date.now();
+  const grades = [];
+  S.forEach(([k,,,dec,ok,warn])=>{
+    const raw = d[k], v = Number(raw);
+    const el = document.getElementById("v_"+k), card = document.getElementById("c_"+k), badge = document.getElementById("b_"+k);
+    if (raw === null || raw === undefined || !isFinite(v)){
+      el.textContent = "--"; card.className = "c"; badge.textContent = "No data";
+      document.getElementById("p_"+k).setAttribute("d", spark(k));
+      return;
+    }
+    const g = grade(v, ok, warn);
+    el.textContent = v.toFixed(dec);
+    card.className = "c " + g;
+    badge.textContent = WORD[g];
+    if (WATER_KEYS.includes(k)) grades.push(g);
+    hist[k].push(v); if (hist[k].length > 60) hist[k].shift();
+    document.getElementById("p_"+k).setAttribute("d", spark(k));
+  });
+
+  // overall water quality (pH, TDS, turbidity, water temperature)
+  const o = document.getElementById("overall"), ox = document.getElementById("overallx");
+  if (!grades.length){ o.className = ""; ox.textContent = "Waiting for water data"; }
+  else {
+    const worst = grades.includes("bad") ? "bad" : grades.includes("warn") ? "warn" : "ok";
+    o.className = worst;
+    ox.textContent = "Water quality: " + WORD[worst];
+  }
+
+  // tank
+  if (d.lvl !== null && d.lvl !== undefined && isFinite(d.lvl)){
+    const pct = Math.max(0, Math.min(100, (TANK_DEPTH_CM - d.lvl) / TANK_DEPTH_CM * 100));
+    document.getElementById("lvl").textContent = pct.toFixed(0);
+    document.getElementById("fill").style.height = pct + "%";
+    document.getElementById("dist").textContent = "Distance to water: " + Number(d.lvl).toFixed(1) + " cm";
+  } else {
+    document.getElementById("lvl").textContent = "--";
+    document.getElementById("fill").style.height = "0%";
+    document.getElementById("dist").textContent = "Distance to water: -- cm";
+  }
+  document.getElementById("ft").textContent = "Last reading " + new Date(last).toLocaleTimeString();
+}
+
+function status(on, t){
+  document.getElementById("st").className = on ? "on" : "";
+  document.getElementById("stx").textContent = t;
+}
+
+firebase.initializeApp({databaseURL: DB_URL});
+const db = firebase.database();
+function check(){
+  const live = last && Date.now() - last < STALE_MS;
+  status(live, live ? "Live" : "Device offline");
+}
+db.ref("history").limitToLast(40).once("value", s=>{
+  s.forEach(c=>{
+    const d = c.val();
+    S.forEach(([k])=>{ if (d && d[k] !== null && d[k] !== undefined && isFinite(d[k])) hist[k].push(Number(d[k])); });
+  });
+}).catch(()=>{}).finally(()=>{
+  db.ref("sensors/latest").on("value", s=>{
+    const d = s.val(); if (!d) return;
+    render(d); check();
+  }, ()=>status(false, "No connection"));
+});
+setInterval(check, 5000);
+</script>
+</body>
+</html>
