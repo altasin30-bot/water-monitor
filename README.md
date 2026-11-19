@@ -238,7 +238,7 @@ The original project proposal also includes the following, which are not part of
 **Authors**
 
 - M A Nabihan Tasin (ID: 0432320005101182)
-- - Irina Ferdous Choity (ID: 0432320005101170)
+- Irina Ferdous Choity (ID: 0432320005101170)
 - Mowmita Mohona (ID: 0432320005101175)
 - Md. Khairul Islam (ID: 0432320005101199)
 
